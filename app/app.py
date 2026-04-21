@@ -25,6 +25,7 @@ COUNTRY_NAMES = {
     "CA": "Canada",
     "FR": "France",
     "DE": "Germany",
+    "IN": "India",
     "NL": "Netherlands",
     "NZ": "New Zealand",
     "SG": "Singapore",
@@ -39,9 +40,12 @@ def display_name(code: str) -> str:
 
 df = load_data()
 all_countries = sorted(df["country"].dropna().unique())
-# Selectbox options: full names map back to codes for filtering
 country_options = ["All"] + all_countries
 country_labels = ["All"] + [display_name(c) for c in all_countries]
+
+all_roles_raw = sorted(df["search_term"].dropna().unique())
+role_options = ["All Roles"] + all_roles_raw
+role_labels = ["All Roles"] + [r.title() for r in all_roles_raw]
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
@@ -56,28 +60,67 @@ with st.sidebar:
     st.markdown("**Countries Covered**")
     st.write(", ".join(display_name(c) for c in all_countries))
 
+    st.markdown("---")
+    jobs_per_country = (
+        df["country"]
+        .value_counts()
+        .reset_index()
+        .rename(columns={"country": "Code", "count": "Jobs"})
+    )
+    jobs_per_country["Country"] = jobs_per_country["Code"].apply(display_name)
+    jobs_per_country = jobs_per_country.sort_values("Jobs")
+
+    fig_sidebar = px.bar(
+        jobs_per_country,
+        x="Jobs",
+        y="Country",
+        orientation="h",
+        title="Jobs per Country",
+    )
+    fig_sidebar.update_layout(
+        margin=dict(l=0, r=0, t=30, b=0),
+        height=320,
+        xaxis_title=None,
+        yaxis_title=None,
+        title_font_size=13,
+    )
+    st.plotly_chart(fig_sidebar, use_container_width=True)
+
 # ── Tabs ───────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs(["Skills Demand", "Salary Insights", "Work Type Trends"])
+tab1, tab2, tab3, tab4 = st.tabs(["Skills Demand", "Salary Insights", "Work Type Trends", "Skills by Role"])
 
 
 # ── Tab 1: Skills Demand ───────────────────────────────────────────────────────
 with tab1:
     st.header("Top 20 In-Demand Skills")
 
-    skills_label = st.selectbox(
-        "Filter by country", country_labels, key="skills_country"
-    )
+    col_a, col_b = st.columns(2)
+    with col_a:
+        skills_label = st.selectbox(
+            "Filter by country", country_labels, key="skills_country"
+        )
+    with col_b:
+        skills_role_label = st.selectbox(
+            "Filter by role", role_labels, key="skills_role"
+        )
     skills_code = country_options[country_labels.index(skills_label)]
+    skills_role = role_options[role_labels.index(skills_role_label)]
 
     skills_df = df.copy()
     if skills_code != "All":
         skills_df = skills_df[skills_df["country"] == skills_code]
+    if skills_role != "All Roles":
+        skills_df = skills_df[skills_df["search_term"] == skills_role]
 
     skills_exploded = (
         skills_df.explode("skills_found")
         .dropna(subset=["skills_found"])
         .query("skills_found != ''")
     )
+
+    job_count = len(skills_df)
+    if job_count < 50:
+        st.warning(f"⚠️ Only {job_count} jobs match this filter — results may not be representative.")
 
     if skills_exploded.empty:
         st.info("No skill data available for the selected filter.")
@@ -95,7 +138,7 @@ with tab1:
             x="Count",
             y="Skill",
             orientation="h",
-            title=f"Top 20 Skills — {skills_label}",
+            title=f"Top 20 Skills — {skills_label} · {skills_role_label}",
             color="Count",
             color_continuous_scale="Blues",
         )
@@ -106,7 +149,7 @@ with tab1:
 # ── Tab 2: Salary Insights ─────────────────────────────────────────────────────
 with tab2:
     st.header("Average Salary Range by Country")
-    st.caption("Note: salaries are in each country's local currency — direct comparisons across countries are not meaningful.")
+    st.caption("⚠️ Salaries are shown as advertised in local currency. Some employers post annual salaries, others post monthly — direct comparisons within or across countries may not be meaningful. Use as a directional reference only.")
 
     salary_df = df.dropna(subset=["salary_min", "salary_max"]).copy()
     salary_df = salary_df[
@@ -204,3 +247,43 @@ with tab3:
     total = wt_counts["Count"].sum()
     wt_counts["Share (%)"] = (wt_counts["Count"] / total * 100).round(1)
     st.dataframe(wt_counts, use_container_width=True, hide_index=True)
+
+
+# ── Tab 4: Skills by Role ──────────────────────────────────────────────────────
+with tab4:
+    st.header("Top 15 Skills by Role")
+
+    role4_label = st.selectbox(
+        "Select role", role_labels[1:], key="role4"  # exclude "All Roles"
+    )
+    role4_code = role_options[role_labels.index(role4_label)]
+
+    role4_df = (
+        df[df["search_term"] == role4_code]
+        .explode("skills_found")
+        .dropna(subset=["skills_found"])
+        .query("skills_found != ''")
+    )
+
+    if role4_df.empty:
+        st.info("No skill data available for this role.")
+    else:
+        role4_counts = (
+            role4_df["skills_found"]
+            .value_counts()
+            .head(15)
+            .reset_index()
+        )
+        role4_counts.columns = ["Skill", "Count"]
+
+        fig4 = px.bar(
+            role4_counts.sort_values("Count"),
+            x="Count",
+            y="Skill",
+            orientation="h",
+            title=f"Top 15 Skills — {role4_label}",
+            color="Count",
+            color_continuous_scale="Teal",
+        )
+        fig4.update_layout(coloraxis_showscale=False, yaxis_title=None, xaxis_title="Job Postings")
+        st.plotly_chart(fig4, use_container_width=True)
