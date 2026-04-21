@@ -11,7 +11,8 @@ load_dotenv()
 APP_ID = os.getenv("ADZUNA_APP_ID")
 APP_KEY = os.getenv("ADZUNA_APP_KEY")
 
-COUNTRIES = ["gb", "us", "au", "ca", "de", "fr", "nl", "sg", "nz", "at"]
+COUNTRIES = ["gb", "us", "au", "ca", "de", "fr", "nl", "sg", "nz", "at", "in"]
+
 SEARCH_TERMS = [
     "data scientist",
     "data analyst",
@@ -32,6 +33,7 @@ FIELDS = [
 ]
 
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "raw" / "jobs_raw.csv"
+# OUTPUT_PATH = Path(__file__).parent.parent / "data" / "raw" / "jobs_india.csv"
 
 
 def fetch_page(session: requests.Session, country: str, page: int, search_term: str) -> dict:
