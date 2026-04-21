@@ -119,8 +119,11 @@ with tab1:
     )
 
     job_count = len(skills_df)
-    if job_count < 50:
-        st.warning(f"⚠️ Only {job_count} jobs match this filter — results may not be representative.")
+    if job_count == 0:
+        st.warning("⚠️ No jobs match this filter — try adjusting your selection.")
+    elif job_count < 50:
+        noun = "job matches" if job_count == 1 else "jobs match"
+        st.warning(f"⚠️ Only {job_count} {noun} this filter — results may not be representative.")
 
     if skills_exploded.empty:
         st.info("No skill data available for the selected filter.")
