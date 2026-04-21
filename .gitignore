@@ -1,5 +1,6 @@
 .env
-data/raw/
+data/raw/jobs_raw.csv
 data/processed/
 __pycache__/
 *.pyc
+
