@@ -7,7 +7,8 @@ INPUT_PATH = Path(__file__).parent.parent / "data" / "raw" / "jobs_raw.csv"
 OUTPUT_PATH = Path(__file__).parent.parent / "data" / "processed" / "jobs_processed.csv"
 
 SKILLS = [
-    "Python", "SQL", "R", "TensorFlow", "PyTorch", "AWS", "Azure", "GCP",
+    # Core languages (R handled separately below)
+    "Python", "SQL", "TensorFlow", "PyTorch", "AWS", "Azure", "GCP",
     "Spark", "Kafka", "Airflow", "dbt", "Tableau", "Power BI", "Excel",
     "scikit-learn", "Keras", "Docker", "Kubernetes", "Git", "Linux", "Scala",
     "Java", "C++", "MATLAB", "SAS", "Hadoop", "Snowflake", "Databricks",
@@ -15,6 +16,22 @@ SKILLS = [
     "LangChain", "OpenCV", "NumPy", "pandas", "PySpark", "Redshift",
     "dask", "XGBoost", "LightGBM", "CatBoost", "Plotly", "Seaborn",
     "Matplotlib", "Streamlit", "Grafana",
+    # Databases
+    "PostgreSQL", "MySQL", "MongoDB", "Redis", "Elasticsearch", "DynamoDB",
+    # ML/DL concepts
+    "NLP", "Deep Learning", "Computer Vision", "Reinforcement Learning",
+    "Transformers", "BERT", "LLM",
+    # Statistics / methods
+    "Statistics", "A/B Testing", "Time Series", "Regression",
+    "Classification", "Clustering", "Forecasting",
+    # MLOps / infra
+    "CI/CD", "Jenkins", "Terraform", "REST API", "GraphQL", "Microservices",
+    # Tools
+    "Jupyter", "VS Code", "Postman", "Jira",
+    # Languages
+    "JavaScript", "TypeScript", "Bash", "Shell", "Go", "Rust",
+    # Cloud-specific
+    "SageMaker", "Vertex AI", "Lambda", "S3", "EC2", "Athena", "Glue",
 ]
 
 # Pre-compile patterns once; escape skills with special regex chars (e.g. C++)
@@ -22,6 +39,15 @@ _SKILL_PATTERNS = {
     skill: re.compile(rf"\b{re.escape(skill)}\b", re.IGNORECASE)
     for skill in SKILLS
 }
+
+# "R" needs context-aware matching to avoid false positives in "R&D", "R 2.0", etc.
+# Matches only when R appears in a clear programming context.
+_SKILL_PATTERNS["R"] = re.compile(
+    r"R/Python|Python/R|R,\s*Python|Python,\s*R"
+    r"|R\s+programming|R\s+language|R\s+script|RStudio"
+    r"|\bR\b(?=\s*[,/]|\s+and\s+(?:Python|SQL|SAS|MATLAB|Scala))",
+    re.IGNORECASE,
+)
 
 WORK_TYPE_PATTERNS = {
     "remote":  re.compile(r"\bremote\b", re.IGNORECASE),

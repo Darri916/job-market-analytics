@@ -7,6 +7,9 @@ import streamlit as st
 
 DATA_PATH = Path(__file__).parent.parent / "data" / "processed" / "jobs_processed.csv"
 
+# Update this manually each time you re-run data collection and push
+COLLECTION_DATE = "06 May 2026"
+
 st.set_page_config(page_title="Data Science Job Market Analytics", layout="wide")
 
 
@@ -53,9 +56,7 @@ with st.sidebar:
     st.markdown("---")
     st.metric("Total Jobs Analysed", f"{len(df):,}")
 
-    if df["created"].notna().any():
-        latest = df["created"].max()
-        st.metric("Data Collection Date", latest.strftime("%d %b %Y"))
+    st.metric("Data Collection Date", COLLECTION_DATE)
 
     st.markdown("**Countries Covered**")
     st.write(", ".join(display_name(c) for c in all_countries))
