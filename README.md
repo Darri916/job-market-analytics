@@ -2,7 +2,7 @@
 
 A Streamlit dashboard that analyzes 34,900+ real Data Science job postings across 11 countries, built with live data from the Adzuna API.
 
-🚀 **Live Demo:** [*link coming soon*]
+🚀 **Live Demo:** [job-market-analytics-darranya.streamlit.app](https://job-market-analytics-darranya.streamlit.app/)
 
 ---
 
