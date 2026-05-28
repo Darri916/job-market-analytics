@@ -8,7 +8,7 @@ import streamlit as st
 DATA_PATH = Path(__file__).parent.parent / "data" / "processed" / "jobs_processed.csv"
 
 # Update this manually each time you re-run data collection and push
-COLLECTION_DATE = "06 May 2026"
+COLLECTION_DATE = "28 May 2026"
 
 st.set_page_config(page_title="Data Science Job Market Analytics", layout="wide")
 

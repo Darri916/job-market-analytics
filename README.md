@@ -1,6 +1,6 @@
 # 📊 Job Market Analytics Dashboard
 
-A Streamlit dashboard that analyzes 34,000+ real Data Science job postings across 11 countries, built with live data from the Adzuna API.
+A Streamlit dashboard that analyzes 34,900+ real Data Science job postings across 11 countries, built with live data from the Adzuna API.
 
 🚀 **Live Demo:** [*link coming soon*]
 
@@ -40,7 +40,7 @@ Eight role types were searched:
 
 Data Scientist, Data Analyst, Machine Learning Engineer, Data Engineer, Business Intelligence Analyst, AI Engineer, MLOps Engineer, Analytics Engineer
 
-Raw results were deduplicated on title + company + location + country, reducing the dataset from 43,152 to 34,078 rows. Rows with empty descriptions were also removed before processing.
+Raw results were deduplicated on title + company + location + country, reducing the dataset to 34,929 rows. Rows with empty descriptions were also removed before processing.
 
 ---
 
@@ -62,7 +62,7 @@ Salary data is shown as advertised in local currency. Some employers post annual
 - Salary ranges vary significantly across countries, with wide spreads between advertised minimum and maximum.
 - A large portion of job postings omit explicit work type information, suggesting that remote/hybrid/on-site arrangements are often communicated outside the job description itself.
 
-These insights are derived from 34,000+ real job postings collected in May 2026.
+These insights are derived from 34,900+ real job postings collected on 28 May 2026.
 
 ---
 
