@@ -18,7 +18,7 @@ The goal was to answer practical questions: which technical skills appear most f
 
 The app is organized into four tabs.
 
-**🛠️ Skills Demand** shows the top 20 technical skills found in job descriptions, with filters for both country and role type. Apply both filters together to see, for example, the skills most commonly required for Machine Learning Engineers in the United Kingdom.
+**🛠️ Skills Demand** shows the top 20 technical skills found in job descriptions, with side-by-side filters for country and role type. Apply both filters together to see, for example, the skills most commonly required for Machine Learning Engineers in the United Kingdom. A sample-size warning is shown automatically when fewer than 50 jobs match the selected filters.
 
 **💰 Salary Insights** displays average advertised salary ranges (min and max) grouped by country, shown in each country's local currency. A grouped bar chart makes it easy to compare the spread between floor and ceiling salaries across markets.
 
@@ -62,15 +62,15 @@ Salary data is shown as advertised in local currency. Some employers post annual
 - Salary ranges vary significantly across countries, with wide spreads between advertised minimum and maximum.
 - A large portion of job postings omit explicit work type information, suggesting that remote/hybrid/on-site arrangements are often communicated outside the job description itself.
 
-These insights are derived from 34,000+ real job postings collected in April 2026.
+These insights are derived from 34,000+ real job postings collected in May 2026.
 
 ---
 
 ## 🔧 Feature Engineering
 
-- Extracted technical skills from job descriptions using regex pattern matching against a predefined taxonomy of 50+ DS tools and frameworks.
-- Standardized skill detection across varied text formats using case-insensitive matching.
-- Classified work arrangement from unstructured description text by detecting keywords (remote, hybrid, on-site) and applied priority logic to handle overlapping labels.
+- Extracted technical skills from job descriptions using regex pattern matching against a predefined taxonomy of 84 skills across databases, ML/DL frameworks, cloud platforms, MLOps tooling, statistical methods, and languages.
+- Standardized skill detection across varied text formats using case-insensitive word-boundary matching. Single-letter skills like "R" use context-aware patterns to avoid false positives in phrases like "R&D" or "R 2.0" — matching only when R appears in clear programming contexts such as "R programming", "Python/R", or skill enumeration lists.
+- Classified work arrangement from unstructured description text by detecting keywords (remote, hybrid, on-site) and applied priority logic (hybrid > remote > on-site) to handle overlapping labels.
 - Parsed and cleaned ISO timestamp data from API responses for temporal analysis.
 
 ---
