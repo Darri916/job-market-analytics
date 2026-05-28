@@ -1,7 +1,5 @@
 .env
 data/raw/jobs_raw.csv
-data/raw/jobs_india.csv
-data/processed/
 __pycache__/
 *.pyc
 
